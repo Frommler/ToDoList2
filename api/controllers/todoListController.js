@@ -27,9 +27,13 @@ exports.update_a_task = async function (req, res) {
 };
 
 exports.delete_a_task = function (req, res) {
-  const removedTask = Task.deleteOne(
-    {
-      _id: req.params.taskId,
-    });
-      res.json({ message: "Task successfully deleted " + removedTask});
+  const removedTask = Task.deleteOne({
+    _id: req.params.taskId,
+  });
+  res.json({ message: "Task successfully deleted " + removedTask });
+};
+
+exports.read_a_date = function (req, res) {
+  let task = Task.find({ Created_date: req.params.date });
+  res.json(task);
 };
