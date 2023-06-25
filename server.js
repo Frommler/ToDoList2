@@ -23,4 +23,4 @@ app.listen(port);
 
 console.log('todo list RESTful API server started on: ' + port);
 
-//TODO 1) show all tasks by choosen date (add route + add methode in controller); 2) all tasks by 2022 change to "statuse ongoing" 3) show all tasks sort by date from new to old
+//TODO 1)

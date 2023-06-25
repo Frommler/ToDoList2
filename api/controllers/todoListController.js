@@ -33,7 +33,44 @@ exports.delete_a_task = function (req, res) {
   res.json({ message: "Task successfully deleted " + removedTask });
 };
 
-exports.read_a_date = function (req, res) {
-  let task = Task.find({ Created_date: req.params.date });
+exports.sort_by_date = async function (req, res) {
+  let task = await Task.find().sort({ Created_date: 1 });
+  res.json(task);
+};
+
+exports.get_by_year = async function (req, res) {
+  let year = req.params.year;
+  let startDate = new Date(year, 0, 1);
+  let endDate = new Date(year, 11, 31);
+  let task = await Task.find({
+    Created_date: {
+      $gte: startDate,
+      $lte: endDate,
+    },
+  });
+  res.json(task);
+};
+
+exports.upd_status_by_year = async function (req, res) {
+  let year = req.params.year;
+  let startDate = new Date(year, 0, 1);
+  let endDate = new Date(year, 11, 31);
+  let task = await Task.updateMany(
+    {
+      Created_date: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    },
+    {
+      status: "ongoing",
+    }
+  );
+  res.json(task);
+};
+
+exports.get_by_param = async function (req, res) {
+  let param = req.params.param;
+  let task = await Task.find({ name: { $regex: param, $options: "i" } });
   res.json(task);
 };
