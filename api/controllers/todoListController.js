@@ -83,7 +83,7 @@ exports.upd_all_notes = async function (req, res) {
 exports.get_note_by_param = async function (req, res) {
   const param = req.params.param;
 /*   let tasks = await Task.find({ Note: { $regex: param, $options: "i" } });
-  res.json(tasks); */
+  res.json(tasks); Olya */
   Task.find({ Note: { $regex: param, $options: "i" } })
   .then((tasks) =>
     res.json(tasks)
