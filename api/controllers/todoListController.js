@@ -69,8 +69,38 @@ exports.upd_status_by_year = async function (req, res) {
   res.json(task);
 };
 
-exports.get_by_param = async function (req, res) {
+exports.get_task_by_param = async function (req, res) {
   let param = req.params.param;
   let task = await Task.find({ name: { $regex: param, $options: "i" } });
   res.json(task);
+};
+
+exports.upd_all_notes = async function (req, res) {
+  await Task.updateMany({ Note: "empty note" });
+  res.json({ message: "Update was success" });
+};
+
+exports.get_note_by_param = async function (req, res) {
+  const param = req.params.param;
+/*   let tasks = await Task.find({ Note: { $regex: param, $options: "i" } });
+  res.json(tasks); */
+  Task.find({ Note: { $regex: param, $options: "i" } })
+  .then((tasks) =>
+    res.json(tasks)
+  );
+};
+
+exports.update_note_by_param = async function (req, res) {
+  let param = req.params.param;
+  let newtext = req.params.newtext;
+  console.log("newtext ", newtext);
+  let tasks = await Task.updateMany(
+    { 
+      Note: { $regex: param, $options: "i" } 
+    },
+    {
+      Note: newtext
+    }
+    );
+  res.json(tasks);
 };

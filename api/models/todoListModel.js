@@ -11,6 +11,10 @@ var TaskSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  Note: {
+    type: String,
+    default: "Text of the task",
+  },
   status: {
     type: [
       {
