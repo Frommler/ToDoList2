@@ -81,13 +81,9 @@ exports.upd_all_notes = async function (req, res) {
 };
 
 exports.get_note_by_param = async function (req, res) {
-  let param2 = req.params.param;
-  let tasks = await Task.find({ Note: { $regex: param, $options: "i" } });
-  res.json(tasks); 
-  // Task.find({ Note: { $regex: param2, $options: "i" } })
-  // .then((tasks) =>
-  //   res.json(tasks)
-  // );
+  let param = req.params.param;
+  await Task.updateMany({ Note: { $regex: param, $options: "i" } }, { Name: "changes" });
+  res.json({message: "merge"}); 
 };
 
 exports.update_note_by_param = async function (req, res) {
