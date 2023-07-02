@@ -89,7 +89,7 @@ exports.get_note_by_param = async function (req, res) {
 exports.update_note_by_param = async function (req, res) {
   let param = req.params.param;
   let newtext = req.params.newtext;
-  console.log("newtext ", newtext);
+  console.log("text ", newtext);
   let tasks = await Task.updateMany(
     { 
       Note: { $regex: param, $options: "i" } 
