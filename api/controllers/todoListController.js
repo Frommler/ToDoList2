@@ -81,13 +81,13 @@ exports.upd_all_notes = async function (req, res) {
 };
 
 exports.get_note_by_param = async function (req, res) {
-  const param = req.params.param;
-/*   let tasks = await Task.find({ Note: { $regex: param, $options: "i" } });
-  res.json(tasks); Olya */
-  Task.find({ Note: { $regex: param, $options: "i" } })
-  .then((tasks) =>
-    res.json(tasks)
-  );
+  let param2 = req.params.param;
+  let tasks = await Task.find({ Note: { $regex: param, $options: "i" } });
+  res.json(tasks); 
+  // Task.find({ Note: { $regex: param2, $options: "i" } })
+  // .then((tasks) =>
+  //   res.json(tasks)
+  // );
 };
 
 exports.update_note_by_param = async function (req, res) {
