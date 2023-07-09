@@ -111,4 +111,4 @@ exports.update_note_by_param = async function (req, res) {
   res.json(tasks); //Task
 };
 
-//TODO HW3 1) find all tasks by specified month 2) find all tasks by month and by name at one time (use two params https://stackoverflow.com/questions/15128849/using-multiple-parameters-in-url-in-express) --- 11.07.2023
+//TODO HW3 1) find all tasks by specified month 2) find all tasks by month and by name at one time (use two params https://stackoverflow.com/questions/15128849/using-multiple-parameters-in-url-in-express) --- 12.07.2023
