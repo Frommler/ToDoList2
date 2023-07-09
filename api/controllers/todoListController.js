@@ -33,6 +33,16 @@ exports.delete_a_task = function (req, res) {
   res.json({ message: "Task successfully deleted " + removedTask });
 };
 
+exports.get_by_date = async function (req, res) {
+  let date = req.params.date;
+  let endDate = new Date(req.params.date);
+  endDate.setDate(endDate.getDate() + 1);
+  let tasks = await Task.find({
+    Created_date: {$gt: date, $lt: endDate} 
+  });
+  res.json(tasks);
+};
+
 exports.sort_by_date = async function (req, res) {
   let task = await Task.find().sort({ Created_date: 1 });
   res.json(task);
@@ -102,5 +112,7 @@ exports.update_note_by_param = async function (req, res) {
       Note: newtext
     }
     );
-  res.json(tasks);
+  res.json(tasks); //Task
 };
+
+//TODO HW3 1) find all tasks by specified month 2) find all tasks by month and by name at one time (use two params https://stackoverflow.com/questions/15128849/using-multiple-parameters-in-url-in-express) --- 12.07.2023
