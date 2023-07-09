@@ -28,6 +28,10 @@ module.exports = function (app) {
     .put(todoList.upd_status_by_year);
 
   app
+    .route("/get-by-date/:date")
+    .get(todoList.get_by_date);    
+
+  app
     .route("/notes/:param/:newtext")
     .get(todoList.get_note_by_param)
     .put(todoList.update_note_by_param);

@@ -33,6 +33,16 @@ exports.delete_a_task = function (req, res) {
   res.json({ message: "Task successfully deleted " + removedTask });
 };
 
+exports.get_by_date = async function (req, res) {
+  let date = req.params.date;
+  let endDate = new Date(req.params.date);
+  endDate.setDate(endDate.getDate() + 1);
+  let tasks = await Task.find({
+    Created_date: {$gt: date, $lt: endDate} 
+  });
+  res.json(tasks);
+};
+
 exports.sort_by_date = async function (req, res) {
   let task = await Task.find().sort({ Created_date: 1 });
   res.json(task);
