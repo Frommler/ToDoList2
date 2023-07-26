@@ -34,12 +34,19 @@ exports.delete_a_task = function (req, res) {
 };
 
 exports.get_by_date = async function (req, res) {
-  let date = req.params.date;
-  let endDate = new Date(req.params.date);
-  endDate.setDate(endDate.getDate() + 1);
-  let tasks = await Task.find({
-    Created_date: {$gt: date, $lt: endDate} 
-  });
+  let dateParam = req.params.date;
+  let tasks = await Task.aggregate([
+    {
+      $addFields: {
+        justDate: {
+          $dateToString: { format: "%Y-%m-%d", date: "$Created_date" },
+        },
+      },
+    },
+    {
+      $match: { justDate: dateParam },
+    },
+  ]);
   res.json(tasks);
 };
 
@@ -49,22 +56,26 @@ exports.sort_by_date = async function (req, res) {
 };
 
 exports.get_by_year = async function (req, res) {
-  let year = req.params.year;
-  let startDate = new Date(year, 0, 1);
-  let endDate = new Date(year, 11, 31);
-  let task = await Task.find({
-    Created_date: {
-      $gte: startDate,
-      $lte: endDate,
+  let yearParam = parseInt(req.params.year);
+  let tasks = await Task.aggregate([
+    {
+      $addFields: {
+        justYear: { $year: "$Created_date" },
+      },
     },
-  });
-  res.json(task);
+    {
+      $match: {
+        justYear: yearParam,
+      },
+    },
+  ]);
+  res.json(tasks);
 };
 
+//TODO update + aggregation ?
+
 exports.upd_status_by_year = async function (req, res) {
-  let year = req.params.year;
-  let startDate = new Date(year, 0, 1);
-  let endDate = new Date(year, 11, 31);
+  let year = parseInt(req.params.year);
   let task = await Task.updateMany(
     {
       Created_date: {
@@ -91,13 +102,9 @@ exports.upd_all_notes = async function (req, res) {
 };
 
 exports.get_note_by_param = async function (req, res) {
-  let param2 = req.params.param;
-/*   let tasks = await Task.find({ Note: { $regex: param, $options: "i" } });
-  res.json(tasks); Olya */
-  Task.find({ Note: { $regex: param2, $options: "i" } })
-  .then((tasks) =>
-    res.json(tasks)
-  );
+  let param = req.params.param;
+  let tasks = await Task.find({ Note: { $regex: param, $options: "i" } });
+  res.json(tasks);
 };
 
 exports.update_note_by_param = async function (req, res) {
@@ -105,14 +112,68 @@ exports.update_note_by_param = async function (req, res) {
   let newtext = req.params.newtext;
   console.log("text ", newtext);
   let tasks = await Task.updateMany(
-    { 
-      Note: { $regex: param, $options: "i" } 
+    {
+      Note: { $regex: param, $options: "i" },
     },
     {
-      Note: newtext
+      Note: newtext,
     }
-    );
+  );
   res.json(tasks); //Task
+};
+
+exports.get_count_of_docs = async function (req, res) {
+  let nameParam = req.params.name;
+  const countOfTasks = await Task.countDocuments({
+    name: { $regex: nameParam, $options: "i" },
+  });
+  res.json(countOfTasks);
+};
+
+//TODO change status to date
+
+exports.get_count_task_by_date = async function (req, res) {
+  const tasks = await Task.aggregate([
+    {
+      $group: {
+        _id: { $dateToString: { format: "%Y/%m/%d", date: "$Created_date" } },
+        countTasks: {
+          $count: {},
+        },
+      },
+    },
+  ]);
+  res.json(tasks); //Task
+};
+
+exports.get_task_by_month = async function (req, res) {
+  let monthParam = parseInt(req.params.month);
+  const tasks = await Task.aggregate([
+    {
+      $addFields: {
+        justMonth: {
+          $month: "$Created_date",
+        },
+      },
+    },
+    {
+      $match: {
+        justMonth: monthParam,
+      },
+    },
+  ]);
+  res.json(tasks); //Task
+};
+
+exports.aggregate_add_field = async function (req, res) {
+  let tasks = await Task.aggregate([
+    {
+      $addFields: {
+        year: { $year: "$Created_date" },
+      },
+    },
+  ]);
+  res.json(tasks);
 };
 
 //TODO HW3 1) find all tasks by specified month 2) find all tasks by month and by name at one time (use two params https://stackoverflow.com/questions/15128849/using-multiple-parameters-in-url-in-express) --- 12.07.2023
