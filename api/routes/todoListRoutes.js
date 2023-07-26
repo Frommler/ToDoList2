@@ -32,11 +32,27 @@ module.exports = function (app) {
     .get(todoList.get_by_date);    
 
   app
-    .route("/notes/:param/:newtext")
+    .route("/notes/:param")
     .get(todoList.get_note_by_param)
     .put(todoList.update_note_by_param);
 
   app
     .route("/get-task-by-param/:param")
     .get(todoList.get_task_by_param);
+
+  app
+    .route("/get-count-tasks-by-date")
+    .get(todoList.get_count_task_by_date);
+
+  app
+    .route("/get-tasks-by-month/:month")
+    .get(todoList.get_task_by_month);
+
+  app
+    .route("/get-count-of-docs/:name")
+    .get(todoList.get_count_of_docs);
+
+  app
+    .route("/aggregate-add-field")
+    .get(todoList.aggregate_add_field);
 };
