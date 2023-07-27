@@ -75,16 +75,13 @@ exports.get_by_year = async function (req, res) {
 //TODO update + aggregation ?
 
 exports.upd_status_by_year = async function (req, res) {
-  let year = parseInt(req.params.year);
+  let yearParam = parseInt(req.params.year);
   let task = await Task.updateMany(
     {
-      Created_date: {
-        $gte: startDate,
-        $lte: endDate,
-      },
+      $expr: { $eq: [{ $year: "$Created_date" }, yearParam] },
     },
     {
-      status: "ongoing",
+      status: "pending",
     }
   );
   res.json(task);
