@@ -173,4 +173,32 @@ exports.aggregate_add_field = async function (req, res) {
   res.json(tasks);
 };
 
+exports.count_completed_tasks_by_month = async function (req, res) {
+  let tasks = await Task.aggregate([
+    {
+      $match: { status: "completed" },
+    },
+    {
+      $group: {
+        _id: {
+          month: { $month: "$Created_date" },
+          status: "$status",
+        },
+        countTasks: {
+          $count: {},
+        },
+      },
+    },
+    {
+      $project: { 
+        _id: 0,
+        month: "$_id.month",
+        status: "$_id.status",
+        countTasks: 1,
+      }
+    }
+  ]);
+  res.json(tasks);
+};
+
 //TODO HW3 1) find all tasks by specified month 2) find all tasks by month and by name at one time (use two params https://stackoverflow.com/questions/15128849/using-multiple-parameters-in-url-in-express) --- 12.07.2023
