@@ -55,4 +55,8 @@ module.exports = function (app) {
   app
     .route("/aggregate-add-field")
     .get(todoList.aggregate_add_field);
+
+  app
+    .route("/get-count-completedtasks-by-month")
+    .get(todoList.count_completed_tasks_by_month);
 };
